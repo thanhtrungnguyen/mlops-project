@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 import sys
 
@@ -54,6 +55,15 @@ def perform_training(dataset_path, model_path):
         # Predictions
         y_pred = best_rf.predict(x_val)
         y_pred_proba = best_rf.predict_proba(x_val)
+
+        # Check if the model path exists and remove it if it does.
+        if Path(model_path).exists():
+            shutil.rmtree(model_path)
+            logger.info(f"Existing model at {model_path} has been removed.")
+
+        # Save the best model locally for deployment.
+        mlflow.sklearn.save_model(best_rf, model_path)
+        logger.info(f"Best model saved to the {model_path} directory.")
 
         # Basic metrics
         acc = accuracy_score(y_val, y_pred)
