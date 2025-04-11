@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      # Install Poetry
+      - name: Install Poetry
+        run: pip install poetry
+
+      # Install dependencies defined in pyproject.toml (without dev dependencies)
+      - name: Install Dependencies
+        run: poetry install --no-dev
+
+      # Run tests with pytest (ensure you have tests written)
+      - name: Run Tests
+        run: poetry run pytest --maxfail=1 --disable-warnings -q
+
+      # Build the Docker image (assuming Dockerfile exists in the repo root)
+      - name: Build Docker Image
+        run: docker build -t ml_project .
+
+  # Optionally, add more jobs for deployment, linting, etc.
