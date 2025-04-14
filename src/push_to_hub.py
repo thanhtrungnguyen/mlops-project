@@ -12,7 +12,7 @@ from src.config import MODELS_DIR, PROJ_ROOT
 app = typer.Typer()
 
 
-def push_to_hub(model_path: str, repo_id: str, readme_path: str, token: str = None):
+def push_to_hub(model_path: str, repo_id: str, token: str = None):
     """
     Push a trained model to Hugging Face Hub.
 
@@ -35,7 +35,7 @@ def push_to_hub(model_path: str, repo_id: str, readme_path: str, token: str = No
         config_path = os.path.join(model_path, "config.json")
         with open(config_path, "w") as f:
             json.dump(config, f, indent=2)
-        print(f"Written config.json to {config_path}")
+        logger.info(f"Written config.json to {config_path}")
 
         # Create a simple model card (README.md) as a model description.
         readme_content = """---
@@ -61,7 +61,7 @@ and trigger the "Use this transformer" label on the Hugging Face Hub.
         readme_path = os.path.join(model_path, "README.md")
         with open(readme_path, "w") as f:
             f.write(readme_content)
-        print(f"Written README.md to {readme_path}")
+        logger.info(f"Written README.md to {readme_path}")
 
         # ---- Hugging Face Upload Section ----
 
@@ -88,7 +88,6 @@ and trigger the "Use this transformer" label on the Hugging Face Hub.
 def main(
         model_path: Path = MODELS_DIR / "best_model",
         repo_id: str = "trungngnthanh/mlops-project",
-        readme_path: Path = PROJ_ROOT / "docs/defaults/README.md",
         token: str = None,
 ):
     """
@@ -98,14 +97,9 @@ def main(
         logger.error("Please provide a repository ID (--repo-id username/model-name)")
         sys.exit(1)
 
-    if not readme_path:
-        logger.error("Please provide a path to README.md file (--readme-path path/to/readme.md)")
-        sys.exit(1)
-
     success = push_to_hub(
         model_path=str(model_path),
         repo_id=repo_id,
-        readme_path=str(readme_path),
         token=token
     )
 
