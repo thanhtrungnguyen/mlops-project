@@ -14,7 +14,7 @@ app = typer.Typer()
 
 def generate_data(
         n_samples: int = 10000,
-        n_features: int = 20,
+        n_features: int = 5,
         n_informative: int = 2,
         n_redundant: int = 2,
         random_state: int = 42

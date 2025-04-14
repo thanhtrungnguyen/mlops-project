@@ -17,6 +17,8 @@ from sklearn.metrics import (
 import numpy as np
 import time
 import pandas as pd
+import joblib
+import os
 
 from src.config import MODELS_DIR, PROCESSED_DATA_DIR
 
@@ -62,7 +64,11 @@ def perform_training(dataset_path, model_path):
             logger.info(f"Existing model at {model_path} has been removed.")
 
         # Save the best model locally for deployment.
-        mlflow.sklearn.save_model(best_rf, model_path)
+        # mlflow.sklearn.save_model(best_rf, model_path)
+        os.makedirs(model_path, exist_ok=True)
+        model_filename = "model.joblib"
+        model_file_path = os.path.join(model_path, model_filename)
+        joblib.dump(best_rf, model_file_path)
         logger.info(f"Best model saved to the {model_path} directory.")
 
         # Basic metrics

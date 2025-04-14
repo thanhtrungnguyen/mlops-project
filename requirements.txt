@@ -10,5 +10,7 @@ pandas
 seaborn
 scikit-learn
 mlflow
+huggingface-hub
+transformers
 
 -e .
